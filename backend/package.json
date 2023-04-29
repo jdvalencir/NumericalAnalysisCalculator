@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "API para calculadora de métodos númericos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/JulianValencia08/AnalisisNumerico-Proyecto.git"
+  },
+  "keywords": [
+    "numerical",
+    "methods",
+    "calculator",
+    "numerical"
+  ],
+  "author": "Julian Valencia - Simon Gomez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JulianValencia08/AnalisisNumerico-Proyecto/issues"
+  },
+  "homepage": "https://github.com/JulianValencia08/AnalisisNumerico-Proyecto#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "node-matlab": "^1.3.0"
+  }
+}
