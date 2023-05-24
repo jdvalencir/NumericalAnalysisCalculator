@@ -6,9 +6,9 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 
 # Inicializa la sesión de MATLAB en el contexto de la aplicación
-matlab_script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'matlab_functions_cap2')
-eng = matlab.engine.start_matlab()
-eng.addpath(matlab_script_path)
+# matlab_script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'matlab_functions_cap2')
+# eng = matlab.engine.start_matlab()
+# eng.addpath(matlab_script_path)
 
 def calcular_vardermonde(f_str, a, b, tol, niter):
     f = eng.eval("str2func(" + f_str + ")", nargout=1)

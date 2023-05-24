@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from non_linear_eq import urls as non_linear_urls
 from linear_eq import urls as linear_urls
-from interpolation import ulrs as interp_urls
+# from interpolation import ulrs as interp_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
