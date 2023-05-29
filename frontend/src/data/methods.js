@@ -56,8 +56,27 @@ export const methods = [
   },
   {
     index: 10,
-    id: "splines",
+    id: "spline-lineal",
     theme: "interpolation",
-    name: "Spline (linear, square and cubic)",
+    name: "Spline Lineal",
   },
+  {
+    index: 11,
+    id: "splines-cuadratico",
+    theme: "interpolation",
+    name: "Spline Cuadratico",
+  },
+  {
+    index: 12,
+    id: "splines-cubico",
+    theme: "interpolation",
+    name: "Spline Cubico",
+  },
+  {
+    index: 13,
+    id: "vandermonde",
+    theme: "interpolation",
+    name: "Vandermonde"
+
+  }
 ];

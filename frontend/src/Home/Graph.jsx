@@ -16,19 +16,24 @@ function Graph(){
   const [functionText, setFunctionText] = useState(
     params.has("function") ? params.get("function") : "x^2",
   );
-
+  const [domain, setDomain] = useState(
+    params.has("domain") ? params.get("domain").toString().split(',') : "0,1,2,3",
+  );
+  
   const [errorMessage, setErrorMessage] = useState(null);
   const [grid, setGrid] = useState(false);
   const [domainIsOn, setDomainIsOn] = useState(false);
-  const [xAxis1Domain, setXAxis1Domain] = useState(-7);
-  const [xAxis2Domain, setXAxis2Domain] = useState(7);
-  const [yAxis1Domain, setYAxis1Domain] = useState(undefined);
-  const [yAxis2Domain, setYAxis2Domain] = useState(undefined);
+  const [xAxis1Domain, setXAxis1Domain] = useState(domain[0]);
+  const [xAxis2Domain, setXAxis2Domain] = useState(domain[1]);
+  const [yAxis1Domain, setYAxis1Domain] = useState(domain[2]);
+  const [yAxis2Domain, setYAxis2Domain] = useState(domain[3]);
   
   const handleSubmit = event => {
     event.preventDefault();
     setErrorMessage(null);
     setFunctionText(event.target.functionText.value);
+    //console.log("dominio",event.target.domain.value);
+    //setDomain(event.target.domain.value);
   };
   
   useEffect(() => {
