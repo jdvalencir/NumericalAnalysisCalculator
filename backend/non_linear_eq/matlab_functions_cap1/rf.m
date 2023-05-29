@@ -1,11 +1,16 @@
-function [n, an, xn, bn, fn, error] = rf(f, a, b, max_iter, tol)
+function [iter, an, xn, bn, fn, E, mes, err] = rf(f, a, b, max_iter, tol)
+    format long
     syms x;
     f_sym = sym(f);
-    
-    %Método de la bisección (versión función) ESPAÑOL.
-    %Llama a esta función desde la ventana de comandos o cualquier script para
-    %encontrar la raíz de una función en un intervalo y obtén una tabla con el
-    %proceso.
+    iter = 0;
+    an = 0;
+    xn = 0;
+    bn= 0;
+    fn = 0;
+    E = 0;
+    mes = "";
+    err = '';
+
     
     % ESTA FUNCION PIDE LOS SIGUIENTES DATOS DE ENTRADA:
     
@@ -19,45 +24,76 @@ function [n, an, xn, bn, fn, error] = rf(f, a, b, max_iter, tol)
     
     % VARIABLES DE SALIDA:
     
-    % M = Tabla de resultados {'xl', 'xr', 'xu', 'f(xl)', 'f(xr)', 'f(xu)', 'Error relativo (%)'}
-    % XR = Ultima iteración de la raíz de la función.
-    % ER = Ultima iteracion del error relativo.
-    % Iter = Número de iteraciones
+
     
     %METODOS DE SOLUCION
     
-    %Método 1: Si Niter está vacío (Niter = []) entonces se debe especificar un
-    %error relativo mínimo para converger.
-    %Método 2: Si Tol está vacío (Tol = []) entonces se debe especificar un
-    %número máximo de iteraciones para el código. Es posible que un número muy
-    %grande de iteraciones cree un error y un mensaje aparecerá sugiriendo
-    %reducir el número de iteraciones.
-    a1 = a;
-    b1 = b;
-    %Si se ingresan menos de tres datos de entrada...
-    fa = eval(subs(f_sym, x, a)); %Punto en Y para el límite inferior.
-    fb = eval(subs(f_sym, x, b)); %Punto en Y para el límite superior.
+    if max_iter < 0 
+        err = 'El número de iteraciones es < 0';
+        return
+    end
+    if imag(eval(subs(f_sym, a)))
+        err = 'a no está definido en la función';
+        return
+    end
+    if imag(eval(subs(f_sym, b)))
+        err = 'b no está definido en la función';
+        return
+    end
+    if a >= b
+        err = 'a tiene que ser menor que b';
+        return
+    end
+    if tol < 0
+        err = 'La tolerancia es menor que 0';
+        return
+    end
+
     iter = 1;
-    while (abs(a1 - b1) > tol) && (iter <= max_iter)
-        % Calcular el punto medio del intervalo
-        c = b1 - fb * ((b1 - a1) / (fb - fa));
-        fc = eval(subs(f_sym, x, c));
-        % Calcular el error absoluto
-        error(iter) = abs(b1 - a1) / 2;
-        % Actualizar la tabla de iteraciones
-        n = iter;
-        an(iter) = a1;
-        bn(iter) = b1;
-        xn(iter) = c;
-        fn(iter) = fc;
-        % Actualizar los valores de los puntos
-        if fa * fc < 0
-            b1 = c;
-            fb = fc;
-        else
-            a1 = c;
-            fa = fc;
+    fa = eval(subs(f_sym, a));
+    fb = eval(subs(f_sym, b)); 
+    m = b - (fb * (b - a)) / (fb - fa);
+    fm = eval(subs(f_sym, m)); 
+    numberError = tol + 1;
+    %Si se ingresan menos de tres datos de entrada...
+    while numberError > tol && iter < max_iter
+        an(iter) = a;
+        xn(iter) = m;
+        bn(iter) = b;
+        fn(iter) = fm; 
+        E(iter) = numberError; 
+        if imag(fa)
+            err = 'f(a) no está definido en el dominio de la función';
+            return
         end
-        % Actualizar el contador de iteraciones
+        if imag(fb)
+            err = 'f(b) no está definido en el dominio de la función';
+            return
+        end
+        % Actualizar los valores de los puntos
+        if fa * fm < 0
+            b = m; 
+            fb = fm;
+        elseif fm * fb < 0
+            a = m;
+            fa = fm;
+        end
+        temp = m;
+        m =  b - (fb * (b - a)) / (fb - fa);
+        fm = eval(subs(f_sym, m)); 
+        numberError = abs(m - temp);
         iter = iter + 1;
     end
+    an(iter) = a;
+    xn(iter) = m;
+    bn(iter) = b;
+    fn(iter) = fm; 
+    E(iter) = numberError; 
+    if numberError < tol
+        mes = "Una aproximación de la raíz fue encontrada para m = " + num2str(m, 15);
+    elseif numberError > tol
+        mes = "Dado el número de iteraciones y de tolerancia, fue imposible encontrar una raíz apropiada";
+    else
+        mes = "El método explotó" ; 
+    end
+end

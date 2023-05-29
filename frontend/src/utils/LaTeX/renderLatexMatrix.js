@@ -5,13 +5,13 @@ const renderLatexMatrix = (matrix, fixedNumber) => {
     for (let i = 0; i < matrix.length; i++) {
       if (matrix[0]) {
         for (let j = 0; j < matrix[0].length; j++) {
-          matrix[i][j] = format(matrix[i][j], {
+          matrix[i][j] = format(parseFloat(matrix[i][j]), {
             notation: "fixed",
             precision: fixedNumber
           });
         }
       } else {
-        matrix[i] = format(matrix[i], {
+        matrix[i] = format(parseFloat(matrix[i]), {
           notation: "fixed",
           precision: fixedNumber
         });

@@ -37,10 +37,10 @@ const NewtonRaphson = ({ name }) => {
             setError(null);
 
             const data = {
-                "func": "'@(x)" + functionText + "'",
-                "x0": parseFloat(initialValueX0),
-                "niter": parseInt(iter),
-                "tol": parseFloat(tol)
+                "func": "'@(x)" + event.target.functionText.value + "'",
+                "x0": parseFloat(event.target.initialValueX0.value),
+                "niter": parseInt(event.target.maxCount.value),
+                "tol": parseFloat(event.target.tol.value)
             }
             console.log("data", data);
             const res = await fetch("http://127.0.0.1:8000/api/non_linear_eq/calcular_newton/", 
@@ -61,30 +61,17 @@ const NewtonRaphson = ({ name }) => {
                 data => {
                     setData(data); 
                     console.log(Object.entries(data)) 
-                    const xn = Object.entries(data)[1][1][0][Object.entries(data)[1][1][0].length - 1]
-                    const fn = Object.entries(data)[2][1][0][Object.entries(data)[2][1][0].length - 1]
-                    const iter = Object.entries(data)[0][1]
-                    const err = Object.entries(data)[4][1][0][Object.entries(data)[4][1][0].length - 1]                   
-                    handleConclusion(xn, fn, err, iter)    
+                    if (data["mes_err"].length == 0){                  
+                        setConclusion(data["mes"]) 
+                    } else { 
+                        setError(data["mes_err"])
+                    }   
                 })
         } catch (e) {
             setError(e + "");
         }
     };
-    const handleConclusion = (xn, fn, error, iteration) => {
-        if (fn === 0){
-            setConclusion("La raíz fue encontrada en: " + xn)
-        }
-        else if (error <= tol){
-            setConclusion("Una aproximación fue encontrada en: " + xn)
-        }
-        else if (iteration === iter){
-            setConclusion("Dado el número de iteraciones y la tolerancia, no fue posible encontrar una raíz")
-        }
-        else {
-            setConclusion("El método explotó")
-        }
-    }
+
     return (
         <>
             <Navbar/>
@@ -139,7 +126,7 @@ const NewtonRaphson = ({ name }) => {
                             Iteraciones (maximo 100)
                             <input type="text" name="maxCount" defaultValue={iter} />
                         </label>
-                        <Button>Ejcutar</Button>
+                        <Button>Ejecutar</Button>
                     </form>
                 </Parameters>
                 <Eval>
@@ -159,33 +146,46 @@ const NewtonRaphson = ({ name }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                        {data &&  Array.from({ length: Object.entries(data)[0][1] }).map((_, index) => (
-                                <tr key={index}>
-                                    <td>{index}</td>
-                                    {  Object.entries(data)[1][1].map((columna, columnIndex) => (
-                                        <td key={columnIndex}>{format( columna[index],  { notation: "fixed", precision: 10 })}</td>
-                                    ))} 
-                                    {  Object.entries(data)[2][1].map((columna, columnIndex) => (
-                                        <td key={columnIndex}>{format( columna[index],  { notation: "fixed", precision: 10 })}</td>
-                                    ))} 
-                                    {  Object.entries(data)[3][1].map((columna, columnIndex) => (
-                                        <td key={columnIndex}>{format( columna[index],  { notation: "exponential", precision: 4 })}</td>
-                                    ))} 
-                                    {  Object.entries(data)[4][1].map((columna, columnIndex) => (
-                                        <td key={columnIndex}>{format( columna[index],  { notation: "exponential", precision: 4 })}</td>
-                                    ))} 
+                    {data &&  Array.from({ length: Object.entries(data)[0][1] }).map((_, index) => (
+                        <tr key={index}>
+                            <td>{index}</td>
+                            { Array.isArray(Object.entries(data)[1][1]) && Object.entries(data)[1][1].map((columna, columnIndex) => (
+                                <td key={columnIndex}>{format(columna[index], { notation: "fixed", precision: 10 })}</td>
+                            ))}
+                            { !Array.isArray(Object.entries(data)[1][1]) &&
+                                <td key={1}>{format( Object.entries(data)[1][1], { notation: "fixed", precision: 10 })}</td>
+                            }  
+
+                            { Array.isArray(Object.entries(data)[2][1]) && Object.entries(data)[2][1].map((columna, columnIndex) => (
+                                <td key={columnIndex}>{format(columna[index], { notation: "fixed", precision: 10 })}</td>
+                            ))} 
+                            { !Array.isArray(Object.entries(data)[2][1]) &&
+                                <td key={2}>{format( Object.entries(data)[2][1], { notation: "fixed", precision: 10 })}</td>
+                            }  
+
+                            {  Array.isArray(Object.entries(data)[3][1]) && Object.entries(data)[3][1].map((columna, columnIndex) => (
+                                <td key={columnIndex}>{format(columna[index], { notation: "fixed", precision: 10 })}</td>
+                            ))} 
+                            { !Array.isArray(Object.entries(data)[3][1]) &&
+                                <td key={3}>{format( Object.entries(data)[3][1], { notation: "fixed", precision: 10 })}</td>
+                            }  
+
+                            {  Array.isArray(Object.entries(data)[4][1]) && Object.entries(data)[4][1].map((columna, columnIndex) => (
+                                <td key={columnIndex}>{format(columna[index], { notation: "exponential", precision: 4 })}</td>
+                            ))} 
+                            { !Array.isArray(Object.entries(data)[4][1]) &&
+                                <td key={4}>{format( Object.entries(data)[4][1], { notation: "exponential", precision: 3 })}</td>
+                            }  
+
                         </tr>
-                    ))}
-                                </tbody>
+                    )) }
+                    </tbody>
                             </table>
                             <p> { conclusion } </p>
                         </TableStyle>
                     ) : (
                         <Results>
                             <Error>{error}</Error>
-                            <Link to={"/help"}>
-                                <FontAwesomeIcon icon={"question-circle"} /> Help Page
-                            </Link>
                         </Results>
                     )}
                 </Eval>

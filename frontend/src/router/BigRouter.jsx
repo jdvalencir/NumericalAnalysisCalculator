@@ -10,6 +10,7 @@ import { RegulaFalsi } from "../NonLinear/Metodos/RegulaFalsi";
 import { NewtonRaphson } from "../NonLinear/Metodos/NewtonRaphson";
 import { RaicesMultiples } from "../NonLinear/Metodos/RaicesMultiples" 
 import { Secante } from "../NonLinear/Metodos/Secante";
+import { MetodosIterativos } from "../Linear/metodos/MetodosIterativos";
 
 const BigRouter = () => {
   return (
@@ -26,7 +27,9 @@ const BigRouter = () => {
         <Route path="/ecuaciones-no-lineales/newton-raphson" element={<NewtonRaphson/>} />
         <Route path="/ecuaciones-no-lineales/raices-multiples" element={<RaicesMultiples/>} />
         <Route path="/ecuaciones-no-lineales/secante" element={<Secante/>} />
-
+      
+      {/* RUTAS PARA METODOS EL */}
+      <Route path="/ecuaciones-lineales/iterativos" element={<MetodosIterativos/>} />
       </Routes>
     </Router>
   );
