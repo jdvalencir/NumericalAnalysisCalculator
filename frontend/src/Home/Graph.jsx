@@ -17,7 +17,7 @@ function Graph(){
     params.has("function") ? params.get("function") : "x^2",
   );
   const [domain, setDomain] = useState(
-    params.has("domain") ? params.get("domain").toString().split(',') : "0,1,2,3",
+    params.has("domain") ? params.get("domain").toString().split(',') : [-7,7,7,7],
   );
   
   const [errorMessage, setErrorMessage] = useState(null);
